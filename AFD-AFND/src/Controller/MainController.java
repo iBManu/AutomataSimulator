@@ -29,6 +29,7 @@ public class MainController implements ActionListener{
     private AFD_Dialog d;
     private ArrayList<Integer> estadosFinales;
     private ArrayList<TransicionAFD> transiciones;
+    private ArrayList<Integer> estados;
     
     public MainController() throws UnsupportedLookAndFeelException
     {
@@ -54,6 +55,8 @@ public class MainController implements ActionListener{
         w.addAFDButton.addActionListener(this);
         w.addAFNDButton.addActionListener(this);
         w.showAFDButton.addActionListener(this);
+        w.stepSecuenceButton.addActionListener(this);
+        w.executeSecuenceButton.addActionListener(this);
         d.addTransitionButton.addActionListener(this);
         d.addInitStateButton.addActionListener(this);
         d.addEndStateButton.addActionListener(this);
@@ -80,7 +83,6 @@ public class MainController implements ActionListener{
                 char sym = d.symbolTextField.getText().toCharArray()[0];
                 aut.agregarTransicion(init, sym, end);
                 
-                w.console.append("q" + init + "  '" + sym + "'  " + "q" + end + "\n");
             break;
             
             case "addInitState": 
@@ -98,6 +100,18 @@ public class MainController implements ActionListener{
                 break;
                 
             case "showAFD":
+                
+                w.console.setText("");
+                
+                estados = (ArrayList<Integer>) aut.getEstados();
+                
+                w.console.append("ESTADOS: ");
+                
+                for(int i = 0; i < estados.size(); i++)
+                    w.console.append("q" + estados.get(i) + " ");
+                
+                w.console.append("\n");
+                
                 w.console.append("ESTADO INICIAL: q" + aut.getEstadoInicial() + "\n");
                 w.console.append("ESTADOS FINALES: ");
                 
@@ -114,6 +128,35 @@ public class MainController implements ActionListener{
                 
                 for(int i = 0; i < transiciones.size(); i++)
                     w.console.append(" q" + transiciones.get(i).getInitState() + " '" + transiciones.get(i).getSymbol() + "' q" + transiciones.get(i).getEndState() + "\n");
+                
+                w.console.append("-----------------------------------\n");
+                
+                break;
+                
+            case "executeSecuence":
+                    
+                    w.console.append("\nEJECUTANDO LA SECUENCIA: \n");
+                
+                    char [] secuencia = w.secuenceTextField.getText().toCharArray();
+                    
+                    if(!aut.reconocer(String.valueOf(secuencia)))
+                    {
+                        w.console.append("La secuencia introducida no es válida");
+                        break;
+                    }
+                    
+                    int actual = aut.getEstadoInicial();
+                    
+                    w.console.append("q" + actual + " ---> ");
+                    
+                    for(int i = 0; i < secuencia.length; i++)
+                    {
+                        actual = aut.transicion(actual, secuencia[i]);
+                        w.console.append("q" + actual);
+                        
+                        if(i != secuencia.length - 1)
+                            w.console.append(" ---> ");
+                    }
                 
                 break;
         }
