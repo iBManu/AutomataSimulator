@@ -30,6 +30,7 @@ public class MainController implements ActionListener{
     private ArrayList<Integer> estadosFinales;
     private ArrayList<TransicionAFD> transiciones;
     private ArrayList<Integer> estados;
+    private MyCanvas cv;
     
     public MainController() throws UnsupportedLookAndFeelException
     {
@@ -41,11 +42,11 @@ public class MainController implements ActionListener{
         addListeners();
         
         w.setTitle("Practica 2 AMC");
-        w.setSize(900,560);
+        w.setSize(1250,560);
         w.setLocationRelativeTo(null);
         w.setVisible(true);
         
-        MyCanvas cv = new MyCanvas(500,500);
+        cv = new MyCanvas(850,500);
         w.canvasContainer.setLayout(new GridLayout());
         w.canvasContainer.add(cv);
     }
@@ -131,6 +132,8 @@ public class MainController implements ActionListener{
                 
                 w.console.append("-----------------------------------\n");
                 
+                cv.drawAFD(aut);
+                
                 break;
                 
             case "executeSecuence":
@@ -157,7 +160,7 @@ public class MainController implements ActionListener{
                         if(i != secuencia.length - 1)
                             w.console.append(" ---> ");
                     }
-                
+                                    
                 break;
         }
     }

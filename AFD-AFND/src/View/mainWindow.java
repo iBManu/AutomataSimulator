@@ -36,6 +36,9 @@ public class mainWindow extends java.awt.Frame {
         showAFDButton = new javax.swing.JButton();
         secuenceTextField = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
+        showAFNDButton = new javax.swing.JButton();
+        openFileButton = new javax.swing.JButton();
+        saveFileButton = new javax.swing.JButton();
 
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -46,37 +49,50 @@ public class mainWindow extends java.awt.Frame {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setMinimumSize(new java.awt.Dimension(900, 560));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        jPanel1.add(canvasContainer, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 500, 500));
+        jPanel1.add(canvasContainer, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 850, 500));
 
         console.setColumns(20);
         console.setRows(5);
         jScrollPane1.setViewportView(console);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 10, 340, 270));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 10, 340, 210));
 
         executeSecuenceButton.setText("Ejecutar");
         executeSecuenceButton.setActionCommand("executeSecuence");
-        jPanel1.add(executeSecuenceButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 450, 160, 60));
+        jPanel1.add(executeSecuenceButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(1060, 450, 160, 60));
 
         stepSecuenceButton.setText("Paso");
         stepSecuenceButton.setActionCommand("stepSecuence");
-        jPanel1.add(stepSecuenceButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 450, 160, 60));
+        jPanel1.add(stepSecuenceButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 450, 160, 60));
 
         addAFNDButton.setText("Añadir AFND");
         addAFNDButton.setActionCommand("addAFND");
-        jPanel1.add(addAFNDButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 340, 130, 40));
+        jPanel1.add(addAFNDButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 280, 130, 40));
 
         addAFDButton.setText("Añadir AFD");
         addAFDButton.setActionCommand("addAFD");
-        jPanel1.add(addAFDButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 290, 130, 40));
+        jPanel1.add(addAFDButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 230, 130, 40));
 
         showAFDButton.setText("Mostrar AFD");
         showAFDButton.setActionCommand("showAFD");
-        jPanel1.add(showAFDButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 290, 130, 40));
-        jPanel1.add(secuenceTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 420, 340, -1));
+        jPanel1.add(showAFDButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(1080, 230, 130, 40));
+        jPanel1.add(secuenceTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 420, 340, -1));
 
         jLabel1.setText("Indica la secuencia:");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 400, -1, -1));
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 400, -1, -1));
+
+        showAFNDButton.setText("Mostrar AFND");
+        showAFNDButton.setToolTipText("");
+        showAFNDButton.setActionCommand("showAFND");
+        jPanel1.add(showAFNDButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(1080, 280, 130, 40));
+
+        openFileButton.setText("Abrir fichero");
+        openFileButton.setActionCommand("openFile");
+        jPanel1.add(openFileButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 330, 130, 40));
+
+        saveFileButton.setText("Guardar en fichero");
+        saveFileButton.setActionCommand("saveFile");
+        jPanel1.add(saveFileButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(1080, 330, 130, 40));
 
         add(jPanel1, java.awt.BorderLayout.CENTER);
 
@@ -111,8 +127,11 @@ public class mainWindow extends java.awt.Frame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    public javax.swing.JButton openFileButton;
+    public javax.swing.JButton saveFileButton;
     public javax.swing.JTextField secuenceTextField;
     public javax.swing.JButton showAFDButton;
+    public javax.swing.JButton showAFNDButton;
     public javax.swing.JButton stepSecuenceButton;
     // End of variables declaration//GEN-END:variables
 }

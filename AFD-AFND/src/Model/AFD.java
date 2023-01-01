@@ -54,10 +54,7 @@ public class AFD implements Proceso, Cloneable{
     public int transicion(int estado, char simbolo)
     {
         for(int i = 0; i < transiciones.size(); i++)
-        {
-            System.out.println("ini: " + transiciones.get(i).getInitState() + "," + estado);
-            System.out.println("sim: " +transiciones.get(i).getSymbol() + "," + simbolo + "\n");
-            
+        {   
             if(transiciones.get(i).getInitState() == estado && transiciones.get(i).getSymbol() == simbolo)
             {
                 return transiciones.get(i).getEndState();
