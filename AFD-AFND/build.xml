@@ -10,6 +10,18 @@
 <project name="AFD-AFND" default="default" basedir=".">
     <description>Builds, tests, and runs the project AFD-AFND.</description>
     <import file="nbproject/build-impl.xml"/>
+
+    <path id="classpath">
+        <!-- Other classpath elements -->
+        <pathelement location="lib/flat-laf.jar"/>
+    </path>
+
+
+    <path id="classpath">
+        <!-- Other classpath elements -->
+        <fileset dir="lib" includes="*.jar"/>
+    </path>
+
     <!--
 
     There exist several targets which are by default empty and which can be 

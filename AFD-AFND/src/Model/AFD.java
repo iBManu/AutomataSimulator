@@ -4,7 +4,10 @@
  */
 package Model;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -12,28 +15,46 @@ import java.util.List;
  */
 public class AFD implements Proceso, Cloneable{
     
-    private int [ ] estadosFinales; //indica cuales son los estados Finales
+    private int estadoInicial;
+    private List<Integer> estadosFinales; //indica cuales son los estados Finales
     private List<TransicionAFD> transiciones; //indica la lista de transiciones del AFD
 
     public AFD()
     {
-    
+        transiciones = new ArrayList<TransicionAFD>();
+        estadosFinales = new ArrayList<Integer>();
     }
     
     public void agregarTransicion(int e1, char simbolo, int e2)
     {
+        transiciones.add(new TransicionAFD(e1,e2,simbolo));
+    }
     
+    public void agregarFinal(int e)
+    {
+        estadosFinales.add(e);
+    }
+    
+    public void setInicial(int e)
+    {
+        this.estadoInicial = e;
     }
     
     public int transicion(int estado, char simbolo)
     {
-    
-        return 0;
+        for(int i = 0; i < transiciones.size(); i++)
+        {
+            if(transiciones.get(i).getInitState() == estado && transiciones.get(i).getSymbol() == simbolo)
+            {
+                return transiciones.get(i).getEndState();
+            }
+        }
+        return -1;
     }
     
     public boolean esFinal(int estado)
     {
-    
+        
         return false;
     }
     
@@ -48,14 +69,35 @@ public class AFD implements Proceso, Cloneable{
 
     public static AFD pedir()
     {
-    
         return null;
     }
     
     @Override
     public Object clone()
     {
+        Object o = null;
         
-        return null; 
+        try 
+        {
+            o = super.clone();
+        }
+        catch (CloneNotSupportedException ex)
+        {
+            Logger.getLogger(AFD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return 0; 
+    }
+
+    public int getEstadoInicial() {
+        return estadoInicial;
+    }
+
+    public List<Integer> getEstadosFinales() {
+        return estadosFinales;
+    }
+
+    public List<TransicionAFD> getTransiciones() {
+        return transiciones;
     }
 }

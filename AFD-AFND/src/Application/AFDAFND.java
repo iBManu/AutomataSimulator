@@ -4,6 +4,9 @@
  */
 package Application;
 
+import Controller.MainController;
+import javax.swing.UnsupportedLookAndFeelException;
+
 /**
  *
  * @author manu_
@@ -13,8 +16,8 @@ public class AFDAFND {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        // TODO code application logic here
+    public static void main(String[] args) throws UnsupportedLookAndFeelException {
+        MainController c = new MainController();
     }
     
 }
