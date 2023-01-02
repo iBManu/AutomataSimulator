@@ -153,6 +153,7 @@ public class MainController implements ActionListener{
                 
                 w.console.append("-----------------------------------\n");
                 
+                cv.drawSolution(null);
                 cv.drawAFD(aut);
                 
                 break;
@@ -211,6 +212,9 @@ public class MainController implements ActionListener{
                     
                 secuenceindex = 0;
                 _temptrans = new ArrayList<TransicionAFD>();
+                cv.drawSolution(null);
+                
+                cv.drawAFD(aut);
                 
                 if(!aut.reconocer(String.valueOf(w.secuenceTextField.getText())))
                     w.console.append("\nLa secuencia introducida no es válida");
@@ -250,7 +254,7 @@ public class MainController implements ActionListener{
                 
                 int _actualtemp;
                 
-                if(secuenceindex == secuencia.length - 1)
+                if(secuenceindex == secuencia.length)
                 {
                     w.console.append("\nSECUENCIA TERMINADA");
                     break;
@@ -273,14 +277,12 @@ public class MainController implements ActionListener{
                     _actual = aut.transicion(_actual, secuencia[secuenceindex]);
                     _temptrans.add(new TransicionAFD(_actualtemp,_actual,secuencia[secuenceindex]));
                     cv.drawSolution(_temptrans);
-                    
-                    secuenceindex++;
                 }
                     
-
+                secuenceindex++;
                 w.console.append("q" + _actual);
                 
-                if(secuenceindex < secuencia.length - 1)
+                if(secuenceindex < secuencia.length)
                     w.console.append(" ---> ");
                 
                 break;
