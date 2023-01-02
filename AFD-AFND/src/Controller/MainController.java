@@ -74,7 +74,6 @@ public class MainController implements ActionListener{
         w.moreAFNDButton.addActionListener(this);
         w.enterSecuenceButton.addActionListener(this);
         d.addTransitionButton.addActionListener(this);
-        d.addInitStateButton.addActionListener(this);
         d.addEndStateButton.addActionListener(this);
     }
 
@@ -86,6 +85,7 @@ public class MainController implements ActionListener{
             case "addAFD":
                 
                 aut = new AFD();
+                aut.setInicial(0);
                 
                 d.setLocationRelativeTo(null);
                 d.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
@@ -102,15 +102,6 @@ public class MainController implements ActionListener{
                 cv.update();
                 
             break;
-            
-            case "addInitState": 
-                
-                int ini = Integer.parseInt(d.initStateAFDTextField.getText());
-                aut.setInicial(ini);
-                
-                cv.update();
-                
-                break;
                 
             case "addEndState": 
                 
@@ -123,35 +114,7 @@ public class MainController implements ActionListener{
                 
             case "showAFD":
                 
-                w.console.setText("");
-                
-                estados = (ArrayList<Integer>) aut.getEstados();
-                
-                w.console.append("ESTADOS: ");
-                
-                for(int i = 0; i < estados.size(); i++)
-                    w.console.append("q" + estados.get(i) + " ");
-                
-                w.console.append("\n");
-                
-                w.console.append("ESTADO INICIAL: q" + aut.getEstadoInicial() + "\n");
-                w.console.append("ESTADOS FINALES: ");
-                
-                estadosFinales = (ArrayList<Integer>) aut.getEstadosFinales();
-                
-                for(int i = 0; i < estadosFinales.size(); i++)
-                    w.console.append("q" + estadosFinales.get(i) + " ");
-                
-                w.console.append("\n");
-                
-                transiciones = (ArrayList<TransicionAFD>) aut.getTransiciones();
-                
-                w.console.append("TRANSICIONES: \n");
-                
-                for(int i = 0; i < transiciones.size(); i++)
-                    w.console.append(" q" + transiciones.get(i).getInitState() + " '" + transiciones.get(i).getSymbol() + "' q" + transiciones.get(i).getEndState() + "\n");
-                
-                w.console.append("-----------------------------------\n");
+                setConsole();
                 
                 cv.drawSolution(null);
                 cv.drawAFD(aut);
@@ -160,33 +123,7 @@ public class MainController implements ActionListener{
                 
             case "saveFile":
                 
-                w.console.setText("");
-                
-                estados = (ArrayList<Integer>) aut.getEstados();
-                
-                w.console.append("ESTADOS: ");
-                
-                for(int i = 0; i < estados.size(); i++)
-                    w.console.append("q" + estados.get(i) + " ");
-                
-                w.console.append("\n");
-                
-                w.console.append("ESTADO INICIAL: q" + aut.getEstadoInicial() + "\n");
-                w.console.append("ESTADOS FINALES: ");
-                
-                estadosFinales = (ArrayList<Integer>) aut.getEstadosFinales();
-                
-                for(int i = 0; i < estadosFinales.size(); i++)
-                    w.console.append("q" + estadosFinales.get(i) + " ");
-                
-                w.console.append("\n");
-                
-                transiciones = (ArrayList<TransicionAFD>) aut.getTransiciones();
-                
-                w.console.append("TRANSICIONES: \n");
-                
-                for(int i = 0; i < transiciones.size(); i++)
-                    w.console.append(" q" + transiciones.get(i).getInitState() + " '" + transiciones.get(i).getSymbol() + "' q" + transiciones.get(i).getEndState() + "\n");
+                setConsole();
                 
                 rw.write(w.console.getText());
                 
@@ -206,12 +143,15 @@ public class MainController implements ActionListener{
                 d.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
                 d.setVisible(true);
                 
+                setConsole();
+                
                 break;
                 
             case "enterSecuence":
                     
                 secuenceindex = 0;
                 _temptrans = new ArrayList<TransicionAFD>();
+                _actual = -1;
                 cv.drawSolution(null);
                 
                 cv.drawAFD(aut);
@@ -287,5 +227,38 @@ public class MainController implements ActionListener{
                 
                 break;
         }
+    }
+    
+    public void setConsole()
+    {
+        w.console.setText("");
+                
+        estados = (ArrayList<Integer>) aut.getEstados();
+
+        w.console.append("ESTADOS: ");
+
+        for(int i = 0; i < estados.size(); i++)
+            w.console.append("q" + estados.get(i) + " ");
+
+        w.console.append("\n");
+
+        w.console.append("ESTADO INICIAL: q" + aut.getEstadoInicial() + "\n");
+        w.console.append("ESTADOS FINALES: ");
+
+        estadosFinales = (ArrayList<Integer>) aut.getEstadosFinales();
+
+        for(int i = 0; i < estadosFinales.size(); i++)
+            w.console.append("q" + estadosFinales.get(i) + " ");
+
+        w.console.append("\n");
+
+        transiciones = (ArrayList<TransicionAFD>) aut.getTransiciones();
+
+        w.console.append("TRANSICIONES: \n");
+
+        for(int i = 0; i < transiciones.size(); i++)
+            w.console.append(" q" + transiciones.get(i).getInitState() + " '" + transiciones.get(i).getSymbol() + "' q" + transiciones.get(i).getEndState() + "\n");
+
+        w.console.append("-----------------------------------\n");
     }
 }

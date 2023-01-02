@@ -146,6 +146,9 @@ public class MyCanvas extends Canvas{
     
     public void drawState(int estado, int x, int y, boolean esfinal, Graphics og)
     {
+        og.setColor(Color.white);
+        og.fillOval(x, y, 30, 30);
+        og.setColor(Color.black);
         og.drawOval(x, y, 30, 30);
         og.drawString("q" + estado, x + 10, y + 20);
         if(esfinal)

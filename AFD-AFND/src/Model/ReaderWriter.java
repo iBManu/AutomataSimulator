@@ -89,7 +89,6 @@ public class ReaderWriter {
                     } else if (line.startsWith("TRANSICIONES:")) {
 
                     } else {
-                        System.out.println("a");
                         Pattern pattern = Pattern.compile("\\d+");
                         Matcher matcher = pattern.matcher(line);
                         int count = 0;
