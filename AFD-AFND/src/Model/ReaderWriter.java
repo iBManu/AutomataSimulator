@@ -1,0 +1,123 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package Model;
+
+import Controller.MainController;
+import View.mainWindow;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.swing.JFileChooser;
+
+/**
+ *
+ * @author manu_
+ */
+public class ReaderWriter {
+
+    private AFD aut;
+    private mainWindow w;
+    
+    public ReaderWriter(mainWindow w)
+    {
+        this.w = w;
+    }
+
+    public void write(String data) {
+
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Save File");
+        int userSelection = fileChooser.showSaveDialog(null);
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
+            try {
+                FileWriter writer = new FileWriter(fileToSave + ".amc");
+                writer.write(data);
+                writer.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    public AFD read() {
+        aut = new AFD();
+
+        JFileChooser fileChooser = new JFileChooser();
+        int result = fileChooser.showOpenDialog(null);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            try {
+                BufferedReader reader = new BufferedReader(new FileReader(selectedFile));
+
+                List<String> states = new ArrayList<>();
+                String line = reader.readLine();
+                while (line != null) {
+                    w.console.append(line + "\n");
+                    if (line.startsWith("ESTADOS:")) {
+                        Pattern pattern = Pattern.compile("q\\d+");
+                        Matcher matcher = pattern.matcher(line);
+                        while (matcher.find()) {
+                            String number = matcher.group().substring(1);
+                            states.add(number);
+                        }
+                    } else if (line.startsWith("ESTADO INICIAL:")) {
+                        Pattern pattern = Pattern.compile("q\\d+");
+                        Matcher matcher = pattern.matcher(line);
+                        while (matcher.find()) {
+                            String number = matcher.group().substring(1);
+                            aut.setInicial(Integer.valueOf(number));
+                        }
+                    } else if (line.startsWith("ESTADOS FINALES:")) {
+                        Pattern pattern = Pattern.compile("q\\d+");
+                        Matcher matcher = pattern.matcher(line);
+                        while (matcher.find()) {
+                            String number = matcher.group().substring(1);
+                            aut.agregarFinal(Integer.valueOf(number));
+                        }
+                    } else if (line.startsWith("TRANSICIONES:")) {
+
+                    } else {
+                        System.out.println("a");
+                        Pattern pattern = Pattern.compile("\\d+");
+                        Matcher matcher = pattern.matcher(line);
+                        int count = 0;
+                        String number1 = null, number2 = null, number3 = null;
+                        while (matcher.find()) {
+                            count++;
+                            if (count == 1) {
+                                number1 = matcher.group();
+                            } else if (count == 2) {
+                                number2 = matcher.group();
+                            } else if (count == 3) {
+                                number3 = matcher.group();
+                            }
+                        }
+
+                        aut.agregarTransicion(Integer.valueOf(number1), number2.charAt(0), Integer.valueOf(number3));
+                    }
+                    line = reader.readLine();
+                }
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        w.console.append("----------------------------");
+
+        return aut;
+    }
+}

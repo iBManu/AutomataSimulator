@@ -39,6 +39,9 @@ public class mainWindow extends java.awt.Frame {
         showAFNDButton = new javax.swing.JButton();
         openFileButton = new javax.swing.JButton();
         saveFileButton = new javax.swing.JButton();
+        moreAFDButton = new javax.swing.JButton();
+        moreAFNDButton = new javax.swing.JButton();
+        enterSecuenceButton = new javax.swing.JButton();
 
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -53,6 +56,8 @@ public class mainWindow extends java.awt.Frame {
 
         console.setColumns(20);
         console.setRows(5);
+        console.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        console.setEnabled(false);
         jScrollPane1.setViewportView(console);
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 10, 340, 210));
@@ -75,8 +80,8 @@ public class mainWindow extends java.awt.Frame {
 
         showAFDButton.setText("Mostrar AFD");
         showAFDButton.setActionCommand("showAFD");
-        jPanel1.add(showAFDButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(1080, 230, 130, 40));
-        jPanel1.add(secuenceTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 420, 340, -1));
+        jPanel1.add(showAFDButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 230, 130, 40));
+        jPanel1.add(secuenceTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 420, 200, -1));
 
         jLabel1.setText("Indica la secuencia:");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 400, -1, -1));
@@ -84,15 +89,29 @@ public class mainWindow extends java.awt.Frame {
         showAFNDButton.setText("Mostrar AFND");
         showAFNDButton.setToolTipText("");
         showAFNDButton.setActionCommand("showAFND");
-        jPanel1.add(showAFNDButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(1080, 280, 130, 40));
+        jPanel1.add(showAFNDButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 280, 130, 40));
 
         openFileButton.setText("Abrir fichero");
         openFileButton.setActionCommand("openFile");
         jPanel1.add(openFileButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 330, 130, 40));
 
-        saveFileButton.setText("Guardar en fichero");
+        saveFileButton.setText("Guardar fichero");
         saveFileButton.setActionCommand("saveFile");
-        jPanel1.add(saveFileButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(1080, 330, 130, 40));
+        jPanel1.add(saveFileButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 330, 130, 40));
+
+        moreAFDButton.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        moreAFDButton.setText("+");
+        moreAFDButton.setActionCommand("moreAFD");
+        jPanel1.add(moreAFDButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 230, 60, 40));
+
+        moreAFNDButton.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        moreAFNDButton.setText("+");
+        moreAFNDButton.setActionCommand("moreAFND");
+        jPanel1.add(moreAFNDButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 280, 60, 40));
+
+        enterSecuenceButton.setText("Introducir");
+        enterSecuenceButton.setActionCommand("enterSecuence");
+        jPanel1.add(enterSecuenceButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(1085, 420, 130, -1));
 
         add(jPanel1, java.awt.BorderLayout.CENTER);
 
@@ -123,10 +142,13 @@ public class mainWindow extends java.awt.Frame {
     public javax.swing.JButton addAFNDButton;
     public javax.swing.JPanel canvasContainer;
     public javax.swing.JTextArea console;
+    public javax.swing.JButton enterSecuenceButton;
     public javax.swing.JButton executeSecuenceButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    public javax.swing.JButton moreAFDButton;
+    public javax.swing.JButton moreAFNDButton;
     public javax.swing.JButton openFileButton;
     public javax.swing.JButton saveFileButton;
     public javax.swing.JTextField secuenceTextField;
