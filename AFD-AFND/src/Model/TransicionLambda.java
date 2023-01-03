@@ -8,6 +8,21 @@ package Model;
  *
  * @author manu_
  */
-class TransicionLambda {
-    
+public class TransicionLambda {
+
+    private int initState;
+    private int[] endStates;
+
+    TransicionLambda(int _initState, int[] _endStates) {
+        initState = _initState;
+        endStates = _endStates;
+    }
+
+    public int getInitState() {
+        return initState;
+    }
+
+    public int[] getEndState() {
+        return endStates;
+    }
 }
