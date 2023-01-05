@@ -89,7 +89,7 @@ public class MyCanvas extends Canvas {
         
         int iter = 1;
 
-        for (int i = 0; i < divisiones; i++) {
+                for (int i = 0; i < divisiones; i++) {
             for (int j = 0; j < 2; j++) {
                 if (iter < estados.size() && !aut.esFinal(estados.get(iter))) {
                     if(!estadosFinales.contains(estados.get(iter)))
@@ -101,52 +101,23 @@ public class MyCanvas extends Canvas {
                 iter++;
             }
         }
+              
+        g.drawImage(img, 0, 0, null);
+                
+        if(esAFN)
+            pintaAFD(og);
+        else
+            pintaAFND(og);
         
-        if (esAFN) {
-            for (int i = 0; i < transiciones.size(); i++) {
-                coords c1 = coordsMap.get(transiciones.get(i).getInitState());
-                coords c2 = coordsMap.get(transiciones.get(i).getEndState());
-                og.drawLine(c1.x + 20, c1.y + 15, c2.x, c2.y + 15);
-                og.fillOval(c2.x - 5, c2.y + 12, 8, 8);
-                /*int [] xPoints = {c1.x + 5,c1.x - 5,c2.x};
-            int [] yPoints = {c1.y + 5,c2.y - 5,c2.y};
-            
-            og.drawPolygon(xPoints, yPoints, 3);*/
-            }
-        } else {
-            for (int i = 0; i < transicionesAFND.size(); i++) {
-                coords c1 = coordsMap.get(transicionesAFND.get(i).getInitState());
-                for(int j = 0; j < transicionesAFND.get(i).getEndState().length; j++)
-                {
-                    coords c2 = coordsMap.get(transicionesAFND.get(i).getEndState()[j]);
-                    og.drawLine(c1.x + 20, c1.y + 15, c2.x, c2.y + 15);
-                    og.fillOval(c2.x - 5, c2.y + 12, 8, 8);
-                } 
-            }
-            for (int i = 0; i < transicionesLambda.size(); i++) {
-                coords c1 = coordsMap.get(transicionesLambda.get(i).getInitState());
-                for(int j = 0; j < transicionesAFND.get(i).getEndState().length; j++)
-                {
-                    coords c2 = coordsMap.get(transicionesLambda.get(i).getEndState()[j]);
-                    og.setColor(Color.blue);
-                    og.drawLine(c1.x + 20, c1.y + 15, c2.x, c2.y + 15);
-                    og.fillOval(c2.x - 5, c2.y + 12, 8, 8);
-                    og.setColor(Color.black);
-                } 
-            }
-        }
-
-        if (transicionesSolucion != null) {
+        if (transicionesSolucion != null)
+        {
             og.setColor(Color.red);
-            for (int i = 0; i < transicionesSolucion.size(); i++) {
+            for (int i = 0; i < transicionesSolucion.size(); i++)
+            {
                 coords c1 = coordsMap.get(transicionesSolucion.get(i).getInitState());
                 coords c2 = coordsMap.get(transicionesSolucion.get(i).getEndState());
                 og.drawLine(c1.x + 20, c1.y + 15, c2.x, c2.y + 15);
                 og.fillOval(c2.x - 5, c2.y + 12, 8, 8);
-                /*int [] xPoints = {c1.x + 5,c1.x - 5,c2.x};
-                int [] yPoints = {c1.y + 5,c2.y - 5,c2.y};
-
-                og.drawPolygon(xPoints, yPoints, 3);*/
             }
         }
 
@@ -172,6 +143,7 @@ public class MyCanvas extends Canvas {
     public void drawAFND(AFND autN) {
         this.esAFN = false;
         this.autN = autN;
+        
         this.estadoInicial = autN.getEstadoInicial();
         this.estadosFinales = (ArrayList<Integer>) autN.getEstadosFinales();
         this.transicionesAFND = (ArrayList<TransicionAFND>) autN.getTransiciones();
@@ -184,6 +156,37 @@ public class MyCanvas extends Canvas {
         System.out.println("Tam estados: " + estados.size());
         
         paint(this.getGraphics());
+    }
+
+    public void pintaAFD(Graphics og)
+    {   
+        for (int i = 0; i < transiciones.size(); i++)
+        {
+            coords c1 = coordsMap.get(transiciones.get(i).getInitState());
+            coords c2 = coordsMap.get(transiciones.get(i).getEndState());
+            og.drawLine(c1.x + 20, c1.y + 15, c2.x, c2.y + 15);
+            og.fillOval(c2.x - 5, c2.y + 12, 8, 8);
+        }
+    }
+    
+    public void pintaAFND(Graphics og)
+    {
+        for (int i = 0; i < transicionesAFND.size(); i++)
+        {
+            coords c1 = coordsMap.get(transicionesAFND.get(i).getInitState());
+            coords c2 = coordsMap.get(transicionesAFND.get(i).getEndState());
+            og.drawLine(c1.x + 20, c1.y + 15, c2.x, c2.y + 15);
+            og.fillOval(c2.x - 5, c2.y + 12, 8, 8);
+        }
+        for (int i = 0; i < transicionesLambda.size(); i++)
+        {
+            coords c1 = coordsMap.get(transicionesLambda.get(i).getInitState());
+            coords c2 = coordsMap.get(transicionesLambda.get(i).getEndState());
+            og.setColor(Color.blue);
+            og.drawLine(c1.x + 20, c1.y + 15, c2.x, c2.y + 15);
+            og.fillOval(c2.x - 5, c2.y + 12, 8, 8);
+            og.setColor(Color.black);
+        }
     }
 
     public void drawState(int estado, int x, int y, boolean esfinal, Graphics og) {

@@ -23,6 +23,9 @@ import javax.swing.UnsupportedLookAndFeelException;
 import Model.AFND;
 import Model.TransicionAFND;
 import Model.TransicionLambda;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Stack;
 /**
  *
  * @author manu_
@@ -46,7 +49,7 @@ public class MainController implements ActionListener{
     private JFileChooser fileChooser;
     private ReaderWriter rw;
     private AFND_Dialog dL;
-    private boolean esAFN;
+    private boolean esAFD;
     
     public MainController() throws UnsupportedLookAndFeelException
     {
@@ -98,13 +101,9 @@ public class MainController implements ActionListener{
             case "addTransitionLambda":
                 //Botón de añadir transiciones normales en AFND.
                 int init = Integer.parseInt(dL.initStateTextField.getText());
-                char[] end = dL.endStateTextField.getText().toCharArray();
-                int[] endFinal = new int[end.length];
-                for(int i = 0;i < end.length;i++){
-                    endFinal[i] = Character.getNumericValue(end[i]);
-                }
+                int end = Integer.parseInt(dL.endStateTextField.getText());
                 char sym = dL.symbolTextField.getText().toCharArray()[0];
-                autN.agregarTransicion(init, sym, endFinal);
+                autN.agregarTransicion(init, sym, end);
                 cv.update();
                 break;
             case "addEndStateLambda":
@@ -118,17 +117,14 @@ public class MainController implements ActionListener{
                 //Botón de añadir lambda en AFND.
                 int initN = Integer.parseInt(dL.initStateLambdaTextField.getText());
                 char[] endN = dL.endStateLambdaTextField.getText().toCharArray();
-                int[] endFinalN = new int[endN.length];
-                for(int i = 0;i < endN.length;i++){
-                    endFinalN[i] = Character.getNumericValue(endN[i]);
-                }
+                int endFinalN = Integer.parseInt(dL.endStateLambdaTextField.getText());
                 autN.agregarTransicionLambda(initN,endFinalN);
                 cv.update();
                 break;
             
             case "addAFND":
                 
-                esAFN = false;
+                esAFD = false;
                 autN = new AFND();
                 autN.setInicial(0);
                 
@@ -138,7 +134,7 @@ public class MainController implements ActionListener{
                 break;
             case "addAFD":
                 
-                esAFN = true;
+                esAFD = true;
                 aut = new AFD();
                 aut.setInicial(0);
                 
@@ -185,17 +181,35 @@ public class MainController implements ActionListener{
                 
             case "saveFile":
                 
-                setConsole();
+                if(esAFD)
+                {
+                    setConsole();
+
+                    rw.write(w.console.getText());
+                }
+                else
+                {
+                    setConsoleAFND();
+                    
+                    rw.write(w.console.getText());
+                }
                 
-                rw.write(w.console.getText());
+                
                 
                 break;
                 
             case "openFile":
                 
-                aut = rw.read();
-                
-                cv.drawAFD(aut);
+                if(esAFD)
+                {
+                    aut = rw.readAFD();
+                    cv.drawAFD(aut);
+                }
+                else
+                {
+                    autN = rw.readAFND(); 
+                    cv.drawAFND(autN);
+                }
                 
                 break;
                 
@@ -219,7 +233,7 @@ public class MainController implements ActionListener{
                 
             case "enterSecuence":
                     
-                if(esAFN)
+                if(esAFD)
                 {
                     secuenceindex = 0;
                     _temptrans = new ArrayList<TransicionAFD>();
@@ -237,16 +251,17 @@ public class MainController implements ActionListener{
                 }
                 else
                 {
-                    if(!autN.reconocer(String.valueOf(w.secuenceTextField.getText())))
+                    /*if(!autN.reconocer(String.valueOf(w.secuenceTextField.getText())))
                         w.console.append("\nLa secuencia introducida no es válida");
-                    else
+                    else*/
                         secuencia = w.secuenceTextField.getText().toCharArray();
                 }
                 
+                break;
                 
             case "executeSecuence":
                    
-                if(esAFN)
+                if(esAFD)
                 {
                     ArrayList<TransicionAFD> temptrans = new ArrayList<TransicionAFD>();
                     int actualtemp;
@@ -276,11 +291,23 @@ public class MainController implements ActionListener{
                     w.console.append("\nEJECUTANDO LA SECUENCIA: \n");
                     
                     int actual = autN.getEstadoInicial();
+                    ArrayList<Integer> macroestado;
+                    ArrayList<Integer> macroestadoLambdas;
                     w.console.append("q" + actual + " ---> ");
                     
-                    for (int i = 0; i < secuencia.length; i++) {
-                        
+                    macroestado = autN.transicionLambda(actual);
+                    ArrayList<Integer> camino = new ArrayList<Integer>();
+                    camino = solucionAFND(macroestado, secuencia, camino);
+                    /*for (int i = 0; i < secuencia.length; i++)
+                    {
+                        macroestado = autN.transicion(macroestado, secuencia[i]);
+                    }*/
+                    
+                    for(int i = 0; i < camino.size(); i++)
+                    {
+                        w.console.append("q" + camino.get(i) + " ---> ");
                     }
+                    
                 }
                 
                 
@@ -388,9 +415,7 @@ public class MainController implements ActionListener{
 
         for(int i = 0; i < transicionesAFND.size(); i++)
         {
-            w.console.append(" q" + transicionesAFND.get(i).getInitState() + " '" + transicionesAFND.get(i).getSymbol() + "'");
-            for(int j = 0; j < transicionesAFND.get(i).getEndState().length; j++)
-                w.console.append(" q" + transicionesAFND.get(i).getEndState()[j]);
+            w.console.append(" q" + transicionesAFND.get(i).getInitState() + " '" + transicionesAFND.get(i).getSymbol() + "' q" + transicionesAFND.get(i).getEndState());
             w.console.append("\n");
         }
             
@@ -402,13 +427,144 @@ public class MainController implements ActionListener{
         
         for(int i = 0; i < transicionesLambda.size(); i++)
         {
-            w.console.append(" q" + transicionesLambda.get(i).getInitState() + " 'Lambda' q" + transicionesLambda.get(i).getEndState() + "\n");
-            for(int j = 0; j < transicionesLambda.get(i).getEndState().length; j++)
-                w.console.append(" q" + transicionesLambda.get(i).getEndState()[j]);
+            w.console.append(" q" + transicionesLambda.get(i).getInitState() + " 'Lambda' q" + transicionesLambda.get(i).getEndState());
             w.console.append("\n");
         }
             
         
         w.console.append("-----------------------------------\n");
     }
+    
+    public ArrayList<Integer> solucionAFND_Antigua(ArrayList<Integer> macroestado, char [] secuencia, ArrayList<Integer> camino)
+    {
+        /*macroestado = autN.transicion(macroestado, secuencia[0]);
+        macroestado = autN.lambda_clausura(macroestado);*/
+        
+        /*System.out.println("------------------------------------");
+        
+        System.out.println("Tam secuencia: " + secuencia.length);
+        System.out.println("Secuencia actual: " + secuencia[0]);
+        
+        System.out.println("Macroestados: ");
+        
+        for(int i = 0; i < macroestado.size(); i++)
+        {
+            System.out.println(macroestado.get(i) + ",");
+        }
+        
+        if(camino != null)
+        {
+            System.out.println("Camino: ");
+            for(int i = 0; i < camino.size(); i++)
+            {
+                System.out.println(camino.get(i) + ",");
+            }
+        }
+        else
+            secuencia = new char [secuencia.length - 1];*/
+        
+        if(secuencia.length == 1) //SI HEMOS LLEGADO AL FINAL DE LA SECUENCIA, COMPROBAMOS QUE ALGUNO DE LOS ESTADOS SEAN FINALES
+        {
+            /*macroestado = autN.transicion(macroestado, secuencia[0]);
+            System.out.println("Macroestado sin lambda: ");
+            for(int i = 0; i < macroestado.size(); i++)
+            {
+                System.out.println(macroestado.get(i));
+            }
+            //macroestado = autN.lambda_clausura(macroestado);
+            System.out.println("Macroestado con lambda: ");
+            for(int i = 0; i < macroestado.size(); i++)
+            {
+                System.out.println(macroestado.get(i));
+            }*/
+            for(int i = 0; i < macroestado.size(); i++)
+            {
+                System.out.println("Es " + macroestado.get(i) + " final?: " + autN.esFinal(macroestado.get(i)));
+                System.out.println("Proviene " + macroestado.get(i) + " de lambda?: " + autN.provieneDeLambda(macroestado.get(i)));
+                if(autN.esFinal(macroestado.get(i)) && !autN.provieneDeLambda(macroestado.get(i))) //AÑADIR CONDICION DE QUE NO PROVENGA DE LAMBDA
+                {
+                    
+                    if(autN.provieneDeLambda(macroestado.get(i)))
+                    {
+                        camino.add(macroestado.get(i));
+                        macroestado = autN.getFullMacroestado(macroestado.get(i), secuencia[0]);
+                        return solucionAFND(macroestado, secuencia, camino);
+                    }
+                    else
+                    {
+                        camino.add(macroestado.get(i));
+                        return camino;
+                    } 
+                }
+            }
+        }
+        else //SI NO, RECURSIVIDAD
+        {
+            char [] secuenciamenosuno = new char [secuencia.length - 1];
+            /*for(int i = 1; i < secuenciamenosuno.length; i++)
+                secuenciamenosuno[i] = secuencia[i];*/
+            
+            System.arraycopy(secuencia, 1, secuenciamenosuno, 0, secuenciamenosuno.length);
+            
+            for(int i = 0; i < macroestado.size(); i++)
+            {
+                if(autN.transicionLambda(0).contains(macroestado.get(i))) //PARA CADA ESTADO DEL MACROESTADO, COMPROBAMOS SI PROVIENE DE UNA TRANSICION LAMBDA DEL ESTADO "PADRE"(LO HACEMOS SACANDO LAS TRANSICIONES LAMBDA DEL INDICE 0 DEL MACROESTADO, YA QUE ESTE ES EL INICIO DEL MACROESTADO), PARA NO CONTAR UN DIGITO DE LA SECUENCIA
+                {
+                    //System.out.println("tam macro: " + macroestado.size());
+                    camino.add(macroestado.get(i));
+                    macroestado = autN.getFullMacroestado(macroestado.get(i), secuencia[0]);
+                    return solucionAFND(macroestado, secuencia, camino);
+                }
+                else
+                {
+                    //System.out.println("udihfdsojfsd: " + macroestado.get(i) + "," + secuenciamenosuno[0]);
+                    camino.add(macroestado.get(i));
+                    macroestado = autN.getFullMacroestado(macroestado.get(i), secuencia[0]);
+                    return solucionAFND(macroestado, secuenciamenosuno, camino);
+                }
+            }
+        }  
+        return null;
+    }
+    
+    public ArrayList<Integer> solucionAFND(ArrayList<Integer> macroestado, char[] secuencia, ArrayList<Integer> camino) {
+    if (secuencia.length == 0) {
+        // Si hemos llegado al final de la secuencia, comprobamos que alguno de los estados sea final
+        for (int i = 0; i < macroestado.size(); i++) {
+            if (autN.esFinal(macroestado.get(i)) && !autN.provieneDeLambda(macroestado.get(i))) {
+                // Añadimos el estado al camino y retornamos el camino
+                camino.add(macroestado.get(i));
+                return camino;
+            }
+        }
+    } else {
+        // Si no, recursividad
+        char[] secuenciamenosuno = new char[secuencia.length - 1];
+        System.arraycopy(secuencia, 1, secuenciamenosuno, 0, secuenciamenosuno.length);
+
+        for (int i = 0; i < macroestado.size(); i++) {
+            if (autN.transicionLambda(0).contains(macroestado.get(i))) {
+                // Si el estado proviene de una transición lambda desde el estado inicial, no contamos un dígito de la secuencia
+                camino.add(macroestado.get(i));
+                ArrayList<Integer> subCamino = solucionAFND(autN.getFullMacroestado(macroestado.get(i), secuencia[0]), secuencia, camino);
+                if (!subCamino.isEmpty()) {
+                    // Si se ha encontrado un camino, lo retornamos
+                    return subCamino;
+                }
+            } else {
+                // Si no, seguimos avanzando en la secuencia
+                camino.add(macroestado.get(i));
+                ArrayList<Integer> subCamino = solucionAFND(autN.getFullMacroestado(macroestado.get(i), secuencia[0]), secuenciamenosuno, camino);
+                if (!subCamino.isEmpty()) {
+                    // Si se ha encontrado un camino, lo retornamos
+                    return subCamino;
+                }
+            }
+        }
+    }
+
+    // Si no se ha encontrado ningún camino, retornamos una lista vacía
+    return new ArrayList<>();
+}
+
 }

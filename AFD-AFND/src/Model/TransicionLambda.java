@@ -4,6 +4,8 @@
  */
 package Model;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author manu_
@@ -11,18 +13,18 @@ package Model;
 public class TransicionLambda {
 
     private int initState;
-    private int[] endStates;
+    private int endState;
 
-    TransicionLambda(int _initState, int[] _endStates) {
+    TransicionLambda(int _initState, int _endState) {
         initState = _initState;
-        endStates = _endStates;
+        endState = _endState;
     }
 
     public int getInitState() {
         return initState;
     }
 
-    public int[] getEndState() {
-        return endStates;
+    public int getEndState() {
+        return endState;
     }
 }

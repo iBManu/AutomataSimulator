@@ -4,6 +4,8 @@
  */
 package Model;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author manu_
@@ -11,20 +13,20 @@ package Model;
 public class TransicionAFND {
     private int initState;
     private char symbol;
-    private int[] endStates;
+    private int endState;
     
-    TransicionAFND(int _initState,char _symbol,int[] _endStates){
+    TransicionAFND(int _initState,char _symbol,int _endState){
         initState = _initState;
         symbol = _symbol;
-        endStates = _endStates;
+        endState = _endState;
     }
     
     public int getInitState() {
         return initState;
     }
 
-    public int[] getEndState() {
-        return endStates;
+    public int getEndState() {
+        return endState;
     }
 
     public char getSymbol() {
